@@ -1,0 +1,76 @@
+﻿<Window x:Class="MCDApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MCDApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+        <TabControl Margin="5,5,5,5">
+                <TabItem Header="Элипс">
+                    <StackPanel>
+                    <GroupBox Header="Размеры">
+                        <StackPanel>
+                            <TextBlock Text="Ширина"/>
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <Slider Minimum="3" Maximum="30" VerticalAlignment="Center" Value="{Binding Width}"/>
+                                <TextBox x:Name="WStr" Grid.Column="1" Margin="3" MaxLength="4" Text="{Binding WidthStr}"/>
+                            </Grid>
+                            <TextBlock Text="Высота"/>
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <Slider Minimum="3" Maximum="30" VerticalAlignment="Center" Value="{Binding Height}"/>
+                                <TextBox x:Name="HStr" Grid.Column="1" Margin="3" MaxLength="4"  Text="{Binding HeigthStr}"/>
+                            </Grid>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Ограничения">
+                        <DockPanel LastChildFill="False">
+                            <StackPanel DockPanel.Dock="Top">
+                                <Slider Minimum="1" Maximum="100" Width="77" Margin="3" Value="{Binding TopLimit}"/>
+                                <TextBlock HorizontalAlignment="Center" Name="TopTB" Text="Сверху"/>
+                            </StackPanel>
+                            <StackPanel DockPanel.Dock="Bottom">
+                                <Slider Minimum="1" Maximum="100" Width="77" Margin="3" Value="{Binding BottomLimit}"/>
+                                <TextBlock HorizontalAlignment="Center"  Name="BotTB" Text="Снизу"/>
+                            </StackPanel>
+                            <StackPanel DockPanel.Dock="Left">
+                                <Slider Minimum="1" Maximum="100" Width="77" Margin="3" Value="{Binding LeftLimit}"/>
+                                <TextBlock HorizontalAlignment="Center"  Name="LeftTB" Text="Слева"/>
+                            </StackPanel>
+                            <StackPanel DockPanel.Dock="Right" Width="85">
+                                <Slider Minimum="1" Maximum="100" Width="77" Margin="3" Value="{Binding RightLimit}"/>
+                                <TextBlock HorizontalAlignment="Center"  Name="RightTB" Text="Справа"/>
+                            </StackPanel>
+                        </DockPanel>
+                    </GroupBox>
+
+                </StackPanel>
+
+                
+            </TabItem>
+        </TabControl>
+                    <TextBlock Grid.Row="1" x:Name="CurrentBlock" Margin="5"/>
+                </Grid>
+        <ScrollViewer Grid.Column="1" Margin="5,5,5,5" HorizontalScrollBarVisibility="Visible">
+            <Canvas Name="ShemeChanvas" VerticalAlignment="Top" Background="Yellow"/>
+        </ScrollViewer>
+    </Grid>
+</Window>
