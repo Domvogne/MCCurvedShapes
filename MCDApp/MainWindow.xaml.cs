@@ -61,7 +61,8 @@ namespace MCDApp
                 ShemeChanvas.Children.Add(block);
             }
 
-
+            BaseElipse.Height = ow.Heigth * (blockSize);
+            BaseElipse.Width = ow.Width * (blockSize);
 
 
         }

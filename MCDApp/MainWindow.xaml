@@ -69,7 +69,11 @@
             <TextBlock Grid.Row="1" x:Name="CurrentBlock" Margin="5"/>
         </Grid>
         <ScrollViewer Grid.Column="1" Margin="5,5,5,5" HorizontalScrollBarVisibility="Visible">
-            <Canvas Name="ShemeChanvas" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15"/>
+            <Grid>
+                <Ellipse x:Name="BaseElipse" Stroke="Black" StrokeThickness="10" Height="150" Margin="15" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <Canvas Name="ShemeChanvas" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15"/>
+            </Grid>
+
         </ScrollViewer>
     </Grid>
 </Window>

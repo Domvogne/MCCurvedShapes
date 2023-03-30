@@ -1,4 +1,4 @@
-﻿  using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -9,6 +9,8 @@ using System.Security.Principal;
 namespace MCDApp
 {
     public delegate void ShemeUpdate(List<(int, int)> points);
+    public delegate void ListUpdate();
+
     class OvalView
     {
         int width = 10;
@@ -35,7 +37,7 @@ namespace MCDApp
             get => heigh.ToString();
             set
             {
-                if(int.TryParse(value, out heigh))
+                if (int.TryParse(value, out heigh))
                 {
                     if (bottom > heigh)
                         bottom = heigh;
@@ -101,44 +103,48 @@ namespace MCDApp
         {
             int RoundToInt(double value) => (int)Math.Round(value);
             var shape = new List<(int, int)>();
-            var hW = RoundToInt(width / 2d);
-            var hH = RoundToInt(heigh / 2d);
-            List<int> yRange = Enumerable.Range(0, hH).ToList();
+            var halfWidth = RoundToInt(width / 2);
+            var halfHeight = RoundToInt(heigh / 2);
+            List<int> yRange = Enumerable.Range(-halfHeight, heigh).ToList();
+            var xRange = Enumerable.Range(-halfWidth, width).ToList();
             void addNormalized(int x, int y)
             {
-                shape.Add((x + RoundToInt(hW), y + RoundToInt(hH)));
+                shape.Add((x + RoundToInt(halfWidth), y + RoundToInt(halfHeight)));
             }
-            int hWindex = hW - 1;
-            int hHindex = hH - 1;
-            for (int x = 0; x < hW; x++)
+            bool evenWidth = width % 2 == 0;
+            bool evenHeight = heigh % 2 == 0;
+            int move = evenHeight ? 1 : 0;
+            int maxH = halfHeight - move;
+            foreach (var x in xRange)
             {
-                int y = (int)Math.Round(Math.Sqrt(1 - Math.Pow(x / (double)hWindex, 2)) * hHindex);
-                shape.Add((x, y));
-                yRange.Remove(y);
+                double lX = x;
+                lX = x > 0 && evenWidth ? x + 1 : x;
+                int y = (int)Math.Ceiling(Math.Sqrt(1 - Math.Pow(lX / (double)halfWidth, 2)) * halfHeight);
+                shape.Add((x, y - move));
+                shape.Add((x, -y));
+                yRange.Remove(y - move);
+                yRange.Remove(-y);
             }
-            foreach (int y in yRange)
+            move = width % 2 == 0 ? 1 : 0;
+            foreach (var y in yRange)
             {
-                int x = (int)Math.Round(Math.Sqrt(1 - Math.Pow(y / (double)hHindex, 2)) * hWindex);
-                shape.Add((x, y));
+                double lY = y;
+                lY = y > 0 && evenHeight ? y + 1 : y;
+                int x = (int)Math.Ceiling(Math.Sqrt(1 - Math.Pow(lY / (double)halfHeight, 2)) * halfWidth);
+                shape.Add((x - move, y));
+                shape.Add((-x, y));
             }
-            //var preshape = new List<(int, int)>();
-            //shape.ForEach(i => preshape.Add(i));
-            //preshape.ForEach(i => shape.Add((-i.Item1, i.Item2)));
-            //shape.ForEach(i => preshape.Add(i));
-            //preshape.ForEach(i => shape.Add((i.Item1, -i.Item2)));
-            //shape.Distinct();
-            //shape = shape.Select(i => (i.Item1 + hHindex, i.Item2 + hWindex)).ToList();
-            shape = shape.Where(i => i.Item2 >= top && i.Item2 <= bottom && i.Item1 <= right && i.Item1 >= left).ToList();
+            int maxW = halfWidth - move;
+            //foreach (int y in yRange)
+            //{
+            //    int x = (int)Math.Round(Math.Sqrt(1 - Math.Pow(y / (double)hHindex, 2)) * hWindex);
+            //    shape.Add((x, y));
+            //}
+            shape = shape.Select(i => (i.Item1 + halfWidth, i.Item2 + halfHeight)).ToList();
+            //shape = shape.Where(i => i.Item2 >= top && i.Item2 <= bottom && i.Item1 <= right && i.Item1 >= left).ToList();
             OnNewSheme.Invoke(shape);
         }
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
         public event ShemeUpdate OnNewSheme;
-
         public double NormalizedLenth(double x, double y)
         {
             var hWidth = width / 2;
