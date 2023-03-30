@@ -1,4 +1,4 @@
-﻿using System;
+﻿  using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -22,10 +22,12 @@ namespace MCDApp
             get => width.ToString();
             set
             {
-                int.TryParse(value, out width);
-                if (width < right)
-                    right = width;
-                Rebuild();
+                if (int.TryParse(value, out width))
+                {
+                    if (width < right)
+                        right = width;
+                    Rebuild();
+                }
             }
         }
         public string HeigthStr
@@ -33,10 +35,13 @@ namespace MCDApp
             get => heigh.ToString();
             set
             {
-                int.TryParse(value, out heigh);
-                if (bottom > heigh)
-                    bottom = heigh;
-                Rebuild();
+                if(int.TryParse(value, out heigh))
+                {
+                    if (bottom > heigh)
+                        bottom = heigh;
+                    Rebuild();
+                }
+
             }
         }
         public int Width
@@ -94,17 +99,43 @@ namespace MCDApp
 
         void Rebuild()
         {
+            int RoundToInt(double value) => (int)Math.Round(value);
             var shape = new List<(int, int)>();
-            var len = Math.PI * Math.Sqrt((width * width + heigh * heigh) / 8);
-            var grade = (Math.Tau / len) / 5;
-            for (double i = 0; i <= Math.Tau; i += grade)
+            var hW = RoundToInt(width / 2d);
+            var hH = RoundToInt(heigh / 2d);
+            List<int> yRange = Enumerable.Range(0, hH).ToList();
+            void addNormalized(int x, int y)
             {
-                var sin = (int)(Math.Round((Math.Sin(i) * heigh) / 2) + heigh / 2);
-                var cos = (int)(Math.Round((Math.Cos(i) * width) / 2) + width / 2);
-                shape.Add((cos, sin));
+                shape.Add((x + RoundToInt(hW), y + RoundToInt(hH)));
             }
+            int hWindex = hW - 1;
+            int hHindex = hH - 1;
+            for (int x = 0; x < hW; x++)
+            {
+                int y = (int)Math.Round(Math.Sqrt(1 - Math.Pow(x / (double)hWindex, 2)) * hHindex);
+                shape.Add((x, y));
+                yRange.Remove(y);
+            }
+            foreach (int y in yRange)
+            {
+                int x = (int)Math.Round(Math.Sqrt(1 - Math.Pow(y / (double)hHindex, 2)) * hWindex);
+                shape.Add((x, y));
+            }
+            //var preshape = new List<(int, int)>();
+            //shape.ForEach(i => preshape.Add(i));
+            //preshape.ForEach(i => shape.Add((-i.Item1, i.Item2)));
+            //shape.ForEach(i => preshape.Add(i));
+            //preshape.ForEach(i => shape.Add((i.Item1, -i.Item2)));
+            //shape.Distinct();
+            //shape = shape.Select(i => (i.Item1 + hHindex, i.Item2 + hWindex)).ToList();
             shape = shape.Where(i => i.Item2 >= top && i.Item2 <= bottom && i.Item1 <= right && i.Item1 >= left).ToList();
             OnNewSheme.Invoke(shape);
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
         public event ShemeUpdate OnNewSheme;
 

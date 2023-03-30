@@ -32,6 +32,7 @@ namespace MCDApp
             ow.OnNewSheme += Ow_OnNewSheme;
             DataContext = ow;
             UpdateTextBoxes();
+            ow.Heigth = 10;
         }
 
         private void Ow_OnNewSheme(List<(int, int)> points)
@@ -66,13 +67,13 @@ namespace MCDApp
         }
         private void UpdateTextBoxes()
         {
-            WStr.Text = ow.WidthStr;
-            HStr.Text = ow.HeigthStr;
+            //WStr.Text = ow.WidthStr;
+            //HStr.Text = ow.HeigthStr;
             TopTB.Text = $"Сверху(с {ow.TopLimit})";
             BotTB.Text = $"Снизу(до {ow.BottomLimit})";
             LeftTB.Text = $"Слева(с {ow.LeftLimit})";
             RightTB.Text = $"Справа(до {ow.RightLimit})";
-
+            
             
 
         }

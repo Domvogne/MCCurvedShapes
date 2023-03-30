@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCDesiger", "MCDesiger\MCDesiger.csproj", "{D7401876-4538-4E35-8ADD-A6BF9C116AA1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCDApp", "MCDApp\MCDApp.csproj", "{12366A95-1764-4DF8-8BD3-A5CE73FD0B70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCDApp", "MCDApp\MCDApp.csproj", "{12366A95-1764-4DF8-8BD3-A5CE73FD0B70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D7401876-4538-4E35-8ADD-A6BF9C116AA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7401876-4538-4E35-8ADD-A6BF9C116AA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7401876-4538-4E35-8ADD-A6BF9C116AA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7401876-4538-4E35-8ADD-A6BF9C116AA1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{12366A95-1764-4DF8-8BD3-A5CE73FD0B70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{12366A95-1764-4DF8-8BD3-A5CE73FD0B70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12366A95-1764-4DF8-8BD3-A5CE73FD0B70}.Release|Any CPU.ActiveCfg = Release|Any CPU
