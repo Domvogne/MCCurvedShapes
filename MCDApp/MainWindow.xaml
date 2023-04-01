@@ -16,7 +16,7 @@
                 <RowDefinition/>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
-            <TabControl Margin="5,5,5,5">
+            <TabControl Margin="5,5,5,5" Name="ToolsTab">
                 <TabItem Header="Элипс">
                     <StackPanel>
                         <GroupBox Header="Размеры">
@@ -62,15 +62,28 @@
                             </DockPanel>
                         </GroupBox>
                     </StackPanel>
+                </TabItem>
+                <TabItem Header="Многоугольник" Name="mnctab">
+                    <StackPanel>
+                        <TextBlock Text="Радиус"/>
+                        <Slider Minimum="5" Maximum="100" VerticalAlignment="Center" Value="{Binding Radius}"/>
+                        <TextBlock Text="{Binding Radius}"/>
+                        <TextBlock Text="Углы"/>
+                        <Slider Minimum="3" Maximum="10" VerticalAlignment="Center" Value="{Binding Corners}"/>
+                        <TextBlock Text="{Binding Corners}"/>
 
+                        <TextBlock Text="Поворот"/>
+                        <Slider Minimum="0" Maximum="120" VerticalAlignment="Center" Value="{Binding Rotate}"/>
+                        <TextBlock Text="{Binding Rotate}"/>
 
+                    </StackPanel>
                 </TabItem>
             </TabControl>
             <TextBlock Grid.Row="1" x:Name="CurrentBlock" Margin="5"/>
         </Grid>
         <ScrollViewer Grid.Column="1" Margin="5,5,5,5" HorizontalScrollBarVisibility="Visible">
             <Grid>
-                <Ellipse x:Name="BaseElipse" Stroke="Black" StrokeThickness="10" Height="150" Margin="15" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <Ellipse x:Name="BaseElipse" Stroke="Black" StrokeThickness="10" Height="150" Margin="15" Width="150" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Collapsed"/>
                 <Canvas Name="ShemeChanvas" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15"/>
             </Grid>
 

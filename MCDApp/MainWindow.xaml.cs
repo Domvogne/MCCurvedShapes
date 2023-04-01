@@ -25,14 +25,18 @@ namespace MCDApp
     {
         int blockSize = 15;
         OvalView ow;
+        PolygonView pw;
         public MainWindow()
         {
             InitializeComponent();
             ow = new OvalView();
             ow.OnNewSheme += Ow_OnNewSheme;
-            DataContext = ow;
+            pw = new PolygonView();
+            pw.OnNewSheme += Ow_OnNewSheme;
+            mnctab.DataContext = pw;
             UpdateTextBoxes();
             ow.Heigth = 10;
+            ToolsTab.DataContext = new List<IFigureView>() { ow, pw };
         }
 
         private void Ow_OnNewSheme(List<(int, int)> points)
@@ -60,9 +64,6 @@ namespace MCDApp
                 Canvas.SetTop(block, point.Item2 * blockSize);
                 ShemeChanvas.Children.Add(block);
             }
-
-            BaseElipse.Height = ow.Heigth * (blockSize);
-            BaseElipse.Width = ow.Width * (blockSize);
 
 
         }

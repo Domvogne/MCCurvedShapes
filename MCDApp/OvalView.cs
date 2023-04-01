@@ -8,10 +8,9 @@ using System.Security.Principal;
 
 namespace MCDApp
 {
-    public delegate void ShemeUpdate(List<(int, int)> points);
-    public delegate void ListUpdate();
 
-    class OvalView
+
+    class OvalView : IFigureView
     {
         int width = 10;
         int heigh = 10;
@@ -99,7 +98,15 @@ namespace MCDApp
             }
         }
 
-        void Rebuild()
+        public event ShemeUpdate OnNewSheme;
+        public double NormalizedLenth(double x, double y)
+        {
+            var hWidth = width / 2;
+            var hHeith = heigh / 2;
+            return new Vector2((float)(x / hWidth), (float)(y / hHeith)).Length();
+        }
+
+        public void Rebuild()
         {
             int RoundToInt(double value) => (int)Math.Round(value);
             var shape = new List<(int, int)>();
@@ -135,21 +142,9 @@ namespace MCDApp
                 shape.Add((-x, y));
             }
             int maxW = halfWidth - move;
-            //foreach (int y in yRange)
-            //{
-            //    int x = (int)Math.Round(Math.Sqrt(1 - Math.Pow(y / (double)hHindex, 2)) * hWindex);
-            //    shape.Add((x, y));
-            //}
             shape = shape.Select(i => (i.Item1 + halfWidth, i.Item2 + halfHeight)).ToList();
-            //shape = shape.Where(i => i.Item2 >= top && i.Item2 <= bottom && i.Item1 <= right && i.Item1 >= left).ToList();
+            shape = shape.Where(i => i.Item2 >= top && i.Item2 <= bottom && i.Item1 <= right && i.Item1 >= left).ToList();
             OnNewSheme.Invoke(shape);
-        }
-        public event ShemeUpdate OnNewSheme;
-        public double NormalizedLenth(double x, double y)
-        {
-            var hWidth = width / 2;
-            var hHeith = heigh / 2;
-            return new Vector2((float)(x / hWidth), (float)(y / hHeith)).Length();
         }
     }
 }
