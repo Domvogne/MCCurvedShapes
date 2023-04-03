@@ -21,7 +21,7 @@ namespace MCDApp
         {
             var shape = new List<HPoint>();
             HPoint vector = to - from;
-            if (Math.Abs(vector.X) > Math.Abs(vector.Y))
+            if (Math.Abs(vector.X) >= Math.Abs(vector.Y))
             {
                 for (int i = 0; i < Math.Abs(vector.X); i++)
                 {
@@ -32,7 +32,7 @@ namespace MCDApp
             }
             else
             {
-                for (int i = 0; i < Math.Abs(vector.Y); i++)
+                for (int i = 0; i <= Math.Abs(vector.Y); i++)
                 {
                     var k = i / Math.Abs(vector.Y);
                     var currentPoint = vector * k;
@@ -45,7 +45,7 @@ namespace MCDApp
         }
         public static (int, int) CeilVector(HPoint vector)
         {
-            return ((int)Math.Ceiling(vector.X), (int)Math.Ceiling(vector.Y));
+            return ((int)Math.Round(vector.X), (int)Math.Round(vector.Y));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -24,46 +25,113 @@ namespace MCDApp
     public partial class MainWindow : Window
     {
         int blockSize = 15;
-        OvalView ow;
-        PolygonView pw;
+        OvalView ov;
+        PolygonView pv;
+        LineView lv;
+
         public MainWindow()
         {
             InitializeComponent();
-            ow = new OvalView();
-            ow.OnNewSheme += Ow_OnNewSheme;
-            pw = new PolygonView();
-            pw.OnNewSheme += Ow_OnNewSheme;
-            mnctab.DataContext = pw;
+            ov = new OvalView();
+            ov.OnNewSheme += Ow_OnNewSheme;
+            pv = new PolygonView();
+            pv.OnNewSheme += Ow_OnNewSheme;
+            OvalTab.DataContext = ov;
+            PolygonTab.DataContext = pv;
+            LineTab.DataContext = lv;
+            //mnctab.DataContext = pw;
             UpdateTextBoxes();
-            ow.Heigth = 10;
-            ToolsTab.DataContext = new List<IFigureView>() { ow, pw };
+            ov.Heigth = 10;
         }
 
         private void Ow_OnNewSheme(List<(int, int)> points)
         {
-            Debug.WriteLine(JsonSerializer.Serialize(ow));
+            Debug.WriteLine(JsonSerializer.Serialize(ov));
             UpdateTextBoxes();
             DrawShape(points);
         }
         void DrawShape(List<(int, int)> points)
         {
             ShemeChanvas.Children.Clear();
-            
+
             ShemeChanvas.Width = points.Select(i => i.Item1).Max() * blockSize;
             ShemeChanvas.Height = points.Select(i => i.Item2).Max() * blockSize;
+            Dictionary<(int, int), string> markup = new Dictionary<(int, int), string>();
+            var lined = points.OrderBy(i => i.Item2).GroupBy(i => i.Item2);
+            foreach (var l in lined)
+            {
+                if (l.Count() < 3)
+                    continue;
+                var line = l.OrderBy(i => i.Item1).ToList();
+                var linePoint = new List<int>() { 0};
+                for (int i = 0; i < line.Count; i++)
+                {
+                    if (i != line.Count - 1 && line[i].Item1 != line[i + 1].Item1 - 1)
+                    {
+                        linePoint.Add(i);
+                        linePoint.Add(i + 1);
+                    }
+                }
+                linePoint.Add(line.Count - 1);
+                
+                var linesIds = linePoint.Chunk(2);
+                foreach (var microLineId in linesIds)
+                {
+                    var micloLine = line.Skip(microLineId[0]).Take(microLineId[1] - microLineId[0] + 1).ToList();
+                    if (micloLine.Count > 2)
+                    {
+                        markup.Add(micloLine.First(), "←");
+                        markup.Add(micloLine.Last(), "→");
+                        markup.Add(micloLine[micloLine.Count / 2], micloLine.Count.ToString());
+                    }
+                }
+            }
+            lined = points.OrderBy(i => i.Item1).GroupBy(i => i.Item1);
+            foreach (var l in lined)
+            {
+                if (l.Count() < 3)
+                    continue;
+                var line = l.OrderBy(i => i.Item2).ToList();
+                var linePoint = new List<int>() { 0 };
+                for (int i = 0; i < line.Count; i++)
+                {
+                    if (i != line.Count - 1 && line[i].Item2 != line[i + 1].Item2 - 1)
+                    {
+                        linePoint.Add(i);
+                        linePoint.Add(i + 1);
+                    }
+                }
+                linePoint.Add(line.Count - 1);
+
+                var linesIds = linePoint.Chunk(2);
+                foreach (var microLineId in linesIds)
+                {
+                    var micloLine = line.Skip(microLineId[0]).Take(microLineId[1] - microLineId[0] + 1).ToList();
+                    if (micloLine.Count > 2)
+                    {
+                        markup.Add(micloLine.First(), "↑");
+                        markup.Add(micloLine.Last(), "↓");
+                        markup.Add(micloLine[micloLine.Count / 2], micloLine.Count.ToString());
+                    }
+                }
+            }
             foreach (var point in points)
             {
                 Border block = new Border();
                 block.Height = blockSize;
                 block.Width = blockSize;
                 block.BorderThickness = new Thickness(2);
-                block.Background = new SolidColorBrush(Colors.Red);
+                block.Background = new SolidColorBrush(Colors.LightGray);
                 block.DataContext = point;
                 block.MouseEnter += (sender, e) => { CurrentBlock.Text = (sender as Border).DataContext.ToString(); };
+                if (markup.TryGetValue(point, out var text))
+                    block.Child = new TextBlock() { Text = text, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, FontSize = 10 };
                 Canvas.SetLeft(block, point.Item1 * blockSize);
                 Canvas.SetTop(block, point.Item2 * blockSize);
                 ShemeChanvas.Children.Add(block);
             }
+            ShemeChanvas.Width = blockSize * (points.Select(i => i.Item1).Max() + 5);
+            ShemeChanvas.Height = blockSize * (points.Select(i => i.Item2).Max() + 5);
 
 
         }
@@ -71,13 +139,19 @@ namespace MCDApp
         {
             //WStr.Text = ow.WidthStr;
             //HStr.Text = ow.HeigthStr;
-            TopTB.Text = $"Сверху(с {ow.TopLimit})";
-            BotTB.Text = $"Снизу(до {ow.BottomLimit})";
-            LeftTB.Text = $"Слева(с {ow.LeftLimit})";
-            RightTB.Text = $"Справа(до {ow.RightLimit})";
-            
-            
+            TopTB.Text = $"Сверху(с {ov.TopLimit})";
+            BotTB.Text = $"Снизу(до {ov.BottomLimit})";
+            LeftTB.Text = $"Слева(с {ov.LeftLimit})";
+            RightTB.Text = $"Справа(до {ov.RightLimit})";
+        }
 
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (ShemeChanvas == null)
+                return;
+            ShemeChanvas.RenderTransform = new ScaleTransform() { ScaleX = e.NewValue / 100, ScaleY = e.NewValue / 100 };
+            ShemeChanvas.LayoutTransform = new ScaleTransform() { ScaleX = e.NewValue / 95, ScaleY = e.NewValue / 95 };
+            ScaleTB.Text = Math.Round(e.NewValue).ToString() + "%";
         }
     }
 }

@@ -14,10 +14,10 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="70.04"/>
             </Grid.RowDefinitions>
             <TabControl Margin="5,5,5,5" Name="ToolsTab">
-                <TabItem Header="Элипс">
+                <TabItem Header="Элипс" Name="OvalTab">
                     <StackPanel>
                         <GroupBox Header="Размеры">
                             <StackPanel>
@@ -63,23 +63,28 @@
                         </GroupBox>
                     </StackPanel>
                 </TabItem>
-                <TabItem Header="Многоугольник" Name="mnctab">
-                    <StackPanel>
-                        <TextBlock Text="Радиус"/>
+                <TabItem Header="Многоугольник" Name="PolygonTab">
+                    <StackPanel Margin="5">
+                        <TextBlock Text="Сторона"/>
                         <Slider Minimum="5" Maximum="100" VerticalAlignment="Center" Value="{Binding Radius}"/>
                         <TextBlock Text="{Binding Radius}"/>
                         <TextBlock Text="Углы"/>
                         <Slider Minimum="3" Maximum="10" VerticalAlignment="Center" Value="{Binding Corners}"/>
                         <TextBlock Text="{Binding Corners}"/>
-
-                        <TextBlock Text="Поворот"/>
+                        <!--<TextBlock Text="Поворот"/>
                         <Slider Minimum="0" Maximum="120" VerticalAlignment="Center" Value="{Binding Rotate}"/>
-                        <TextBlock Text="{Binding Rotate}"/>
-
+                        <TextBlock Text="{Binding Rotate}"/>-->
                     </StackPanel>
                 </TabItem>
+                <TabItem Header="Линия" Name="LineTab">
+
+                </TabItem>
             </TabControl>
-            <TextBlock Grid.Row="1" x:Name="CurrentBlock" Margin="5"/>
+            <StackPanel Grid.Row="1" VerticalAlignment="Top" Height="60">
+                <TextBlock Grid.Row="1" x:Name="CurrentBlock" Margin="5"/>
+                <Slider Minimum="50" Maximum="500" TickFrequency="5" ValueChanged="Slider_ValueChanged" Value="100"/>
+                <TextBlock x:Name="ScaleTB"/>
+            </StackPanel>
         </Grid>
         <ScrollViewer Grid.Column="1" Margin="5,5,5,5" HorizontalScrollBarVisibility="Visible">
             <Grid>

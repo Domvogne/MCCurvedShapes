@@ -20,6 +20,10 @@ namespace MCDApp
         public static HPoint operator -(HPoint p1, HPoint p2) => new HPoint(p1.X - p2.X, p1.Y - p2.Y);
         public static HPoint operator *(HPoint p1, double k) => new HPoint(p1.X * k, p1.Y * k);
 
-
+        public void Round()
+        {
+            X = Math.Round(X);
+            Y = Math.Round(Y);
+        }
     }
 }
