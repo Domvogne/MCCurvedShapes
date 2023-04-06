@@ -51,7 +51,7 @@ namespace MCDApp
 
         public void Rebuild()
         {
-            List<(int, int)> shape = new List<(int, int)>();
+            List<IntPoint> shape = new List<IntPoint>();
             void DrawFromTo(HPoint s, HPoint e)
             {
                 var line = new Line(s, e);
@@ -69,9 +69,9 @@ namespace MCDApp
                 DrawFromTo(start, vec);
                 start = vec;
             }
-            var xMove = shape.Select(p => p.Item1).Min();
-            var yMove = shape.Select(p => p.Item2).Min();
-            shape = shape.Select(p => (p.Item1 - xMove, p.Item2 - yMove)).ToList();
+            var xMove = shape.Select(p => p.X).Min();
+            var yMove = shape.Select(p => p.Y).Min();
+            shape = shape.Select(p => new IntPoint(p.X - xMove, p.Y - yMove)).ToList();
             //var line = new Line(pts[0], pts[1]);
             //shape.AddRange(line.GetPixels());
             //line = new Line(pts[1], pts[2]);

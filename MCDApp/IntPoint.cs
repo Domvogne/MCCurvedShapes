@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MCDApp
 {
-    struct IntPoint
+    public struct IntPoint
     {
         public int X;
         public int Y;
@@ -23,6 +23,12 @@ namespace MCDApp
         public static IntPoint operator -(IntPoint x, IntPoint y)
         {
             return new IntPoint(x.X - y.X, x.Y - y.Y);
+        }
+        public static bool operator ==(IntPoint x, IntPoint y) => x.X == y.X && x.Y == y.Y;
+        public static bool operator != (IntPoint x, IntPoint y) => x.X != y.X || x.Y != y.Y;
+        public override string ToString()
+        {
+            return $"X:{X}; Y:{Y}";
         }
     }
 }

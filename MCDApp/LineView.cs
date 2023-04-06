@@ -1,11 +1,13 @@
-﻿namespace MCDApp
+﻿using System;
+
+namespace MCDApp
 {
     public class LineView : IFigureView
     {
         public event ShemeUpdate OnNewSheme;
 
-        private int angle;
-        private int lenght;
+        private double angle = 45;
+        private int lenght = 10;
 
         public int Lenght
         {
@@ -19,7 +21,7 @@
 
         public int Angle
         {
-            get { return angle; }
+            get { return (int)angle; }
             set
             {
                 angle = value;
@@ -30,7 +32,11 @@
 
         public void Rebuild()
         {
+            //var endPoint = HPoint.Vector(angle / 360 * Math.Tau) * (lenght);
 
+            //Line line = new Line(HPoint.Zero, endPoint);
+
+            OnNewSheme.Invoke(Line.GetPixelsTrign(angle / 360 * Math.Tau, lenght));
         }
     }
 }

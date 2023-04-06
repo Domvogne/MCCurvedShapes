@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MCDApp
 {
-    public delegate void ShemeUpdate(List<(int, int)> points);
+    public delegate void ShemeUpdate(List<IntPoint> points);
     public delegate void ListUpdate();
     internal interface IFigureView
     {

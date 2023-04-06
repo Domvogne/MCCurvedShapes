@@ -109,14 +109,14 @@ namespace MCDApp
         public void Rebuild()
         {
             int RoundToInt(double value) => (int)Math.Round(value);
-            var shape = new List<(int, int)>();
+            var shape = new List<IntPoint>();
             var halfWidth = RoundToInt(width / 2);
             var halfHeight = RoundToInt(heigh / 2);
             List<int> yRange = Enumerable.Range(-halfHeight, heigh).ToList();
             var xRange = Enumerable.Range(-halfWidth, width).ToList();
             void addNormalized(int x, int y)
             {
-                shape.Add((x + RoundToInt(halfWidth), y + RoundToInt(halfHeight)));
+                shape.Add(new IntPoint(x + RoundToInt(halfWidth), y + RoundToInt(halfHeight)));
             }
             bool evenWidth = width % 2 == 0;
             bool evenHeight = heigh % 2 == 0;
@@ -127,8 +127,8 @@ namespace MCDApp
                 double lX = x;
                 lX = x > 0 && evenWidth ? x + 1 : x;
                 int y = (int)Math.Ceiling(Math.Sqrt(1 - Math.Pow(lX / (double)halfWidth, 2)) * halfHeight);
-                shape.Add((x, y - move));
-                shape.Add((x, -y));
+                shape.Add(new IntPoint(x, y - move));
+                shape.Add(new IntPoint(x, -y));
                 yRange.Remove(y - move);
                 yRange.Remove(-y);
             }
@@ -138,12 +138,12 @@ namespace MCDApp
                 double lY = y;
                 lY = y > 0 && evenHeight ? y + 1 : y;
                 int x = (int)Math.Ceiling(Math.Sqrt(1 - Math.Pow(lY / (double)halfHeight, 2)) * halfWidth);
-                shape.Add((x - move, y));
-                shape.Add((-x, y));
+                shape.Add(new IntPoint(x - move, y));
+                shape.Add(new IntPoint(-x, y));
             }
             int maxW = halfWidth - move;
-            shape = shape.Select(i => (i.Item1 + halfWidth, i.Item2 + halfHeight)).ToList();
-            shape = shape.Where(i => i.Item2 >= top && i.Item2 <= bottom && i.Item1 <= right && i.Item1 >= left).ToList();
+            shape = shape.Select(i => new IntPoint(i.X + halfWidth, i.Y + halfHeight)).ToList();
+            shape = shape.Where(i => i.Y >= top && i.Y <= bottom && i.X <= right && i.X >= left).ToList();
             OnNewSheme.Invoke(shape);
         }
     }

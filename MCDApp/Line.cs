@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -17,8 +18,9 @@ namespace MCDApp
             from = start;
             to = end;
         }
-        public List<(int, int)> GetPixels()
+        public List<IntPoint> GetPixels()
         {
+            Debug.WriteLine($"Line started");
             var shape = new List<HPoint>();
             HPoint vector = to - from;
             if (Math.Abs(vector.X) >= Math.Abs(vector.Y))
@@ -40,12 +42,29 @@ namespace MCDApp
                 }
             }
             shape = shape.Select(i => i + from).ToList();
-            var pts = shape.Select(CeilVector).ToList();
+            shape.ForEach(i => Debug.WriteLine($"{i} -> {i.ToIntPoint()}"));
+            var pts = shape.Select(i => i.ToIntPoint()).ToList();
             return pts;
         }
-        public static (int, int) CeilVector(HPoint vector)
+
+        public static List<IntPoint> GetPixelsTrign(double angle, double len)
         {
-            return ((int)Math.Round(vector.X), (int)Math.Round(vector.Y));
+            var shape = new List<HPoint>();
+            var s = Math.Sin(angle);
+            var c = Math.Cos(angle);
+            var tg = s / c;
+            var ctg = c / s;
+            var until = Math.Max(s, c) * len;
+            var k = Math.Min(s, c);
+            var range = Enumerable.Range(0, (int)until);
+            foreach (var i in range)
+            {
+                shape.Add(new HPoint(i, i * k));
+            }
+            if (s > c)
+                shape = shape.Select(i => i.Resuffled()).ToList();
+            var pix = shape.Select(i => i.ToIntPoint()).ToList();
+            return pix;
         }
     }
 }

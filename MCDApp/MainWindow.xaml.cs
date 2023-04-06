@@ -36,6 +36,8 @@ namespace MCDApp
             ov.OnNewSheme += Ow_OnNewSheme;
             pv = new PolygonView();
             pv.OnNewSheme += Ow_OnNewSheme;
+            lv = new LineView();
+            lv.OnNewSheme += Ow_OnNewSheme;
             OvalTab.DataContext = ov;
             PolygonTab.DataContext = pv;
             LineTab.DataContext = lv;
@@ -44,29 +46,28 @@ namespace MCDApp
             ov.Heigth = 10;
         }
 
-        private void Ow_OnNewSheme(List<(int, int)> points)
+        private void Ow_OnNewSheme(List<IntPoint> points)
         {
-            Debug.WriteLine(JsonSerializer.Serialize(ov));
             UpdateTextBoxes();
             DrawShape(points);
         }
-        void DrawShape(List<(int, int)> points)
+        void DrawShape(List<IntPoint> points)
         {
             ShemeChanvas.Children.Clear();
 
-            ShemeChanvas.Width = points.Select(i => i.Item1).Max() * blockSize;
-            ShemeChanvas.Height = points.Select(i => i.Item2).Max() * blockSize;
-            Dictionary<(int, int), string> markup = new Dictionary<(int, int), string>();
-            var lined = points.OrderBy(i => i.Item2).GroupBy(i => i.Item2);
+            ShemeChanvas.Width = points.Select(i => i.X).Max() * blockSize;
+            ShemeChanvas.Height = points.Select(i => i.Y).Max() * blockSize;
+            Dictionary<IntPoint, string> markup = new Dictionary<IntPoint, string>();
+            var lined = points.OrderBy(i => i.Y).GroupBy(i => i.Y);
             foreach (var l in lined)
             {
                 if (l.Count() < 3)
                     continue;
-                var line = l.OrderBy(i => i.Item1).ToList();
+                var line = l.OrderBy(i => i.X).ToList();
                 var linePoint = new List<int>() { 0};
                 for (int i = 0; i < line.Count; i++)
                 {
-                    if (i != line.Count - 1 && line[i].Item1 != line[i + 1].Item1 - 1)
+                    if (i != line.Count - 1 && line[i].X != line[i + 1].X - 1)
                     {
                         linePoint.Add(i);
                         linePoint.Add(i + 1);
@@ -86,16 +87,16 @@ namespace MCDApp
                     }
                 }
             }
-            lined = points.OrderBy(i => i.Item1).GroupBy(i => i.Item1);
+            lined = points.OrderBy(i => i.X).GroupBy(i => i.X);
             foreach (var l in lined)
             {
                 if (l.Count() < 3)
                     continue;
-                var line = l.OrderBy(i => i.Item2).ToList();
+                var line = l.OrderBy(i => i.Y).ToList();
                 var linePoint = new List<int>() { 0 };
                 for (int i = 0; i < line.Count; i++)
                 {
-                    if (i != line.Count - 1 && line[i].Item2 != line[i + 1].Item2 - 1)
+                    if (i != line.Count - 1 && line[i].Y != line[i + 1].Y - 1)
                     {
                         linePoint.Add(i);
                         linePoint.Add(i + 1);
@@ -126,12 +127,12 @@ namespace MCDApp
                 block.MouseEnter += (sender, e) => { CurrentBlock.Text = (sender as Border).DataContext.ToString(); };
                 if (markup.TryGetValue(point, out var text))
                     block.Child = new TextBlock() { Text = text, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, FontSize = 10 };
-                Canvas.SetLeft(block, point.Item1 * blockSize);
-                Canvas.SetTop(block, point.Item2 * blockSize);
+                Canvas.SetLeft(block, point.X * blockSize);
+                Canvas.SetTop(block, point.Y * blockSize);
                 ShemeChanvas.Children.Add(block);
             }
-            ShemeChanvas.Width = blockSize * (points.Select(i => i.Item1).Max() + 5);
-            ShemeChanvas.Height = blockSize * (points.Select(i => i.Item2).Max() + 5);
+            ShemeChanvas.Width = blockSize * (points.Select(i => i.X).Max() + 5);
+            ShemeChanvas.Height = blockSize * (points.Select(i => i.Y).Max() + 5);
 
 
         }

@@ -77,7 +77,14 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Линия" Name="LineTab">
-
+                    <StackPanel Margin="5">
+                        <TextBlock>Угол</TextBlock>
+                        <Slider Value="{Binding Angle}" Minimum="0" Maximum="90"/>
+                        <TextBlock Text="{Binding Angle}"/>
+                        <TextBlock>Длина</TextBlock>
+                        <Slider Value="{Binding Lenght}" Minimum="0" Maximum="90"/>
+                        <TextBlock Text="{Binding Lenght}"/>
+                    </StackPanel>
                 </TabItem>
             </TabControl>
             <StackPanel Grid.Row="1" VerticalAlignment="Top" Height="60">
