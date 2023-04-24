@@ -16,6 +16,7 @@ namespace MCDApp
         public HPoint(double x, double y)
         {
             X = x;
+            
             Y = y;
         }
 
@@ -39,8 +40,8 @@ namespace MCDApp
         public IntPoint ToIntPoint()
         {
             var ret = new IntPoint();
-            ret.X = (int)Math.Ceiling(X);
-            ret.Y = (int)Math.Ceiling(Y);
+            ret.X = (int)Math.Round(X);
+            ret.Y = (int)Math.Round(Y);
             return ret;
         }
         public double Lenght => Math.Sqrt(X * X + Y * Y);

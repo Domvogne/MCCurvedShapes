@@ -49,20 +49,23 @@ namespace MCDApp
 
         public static List<IntPoint> GetPixelsTrign(double angle, double len)
         {
+            Debug.WriteLine($"Line {angle} rads started");
+
             var shape = new List<HPoint>();
             var s = Math.Sin(angle);
             var c = Math.Cos(angle);
             var tg = s / c;
             var ctg = c / s;
             var until = Math.Max(s, c) * len;
-            var k = Math.Min(s, c);
+            var k = Math.Min(tg, ctg);
             var range = Enumerable.Range(0, (int)until);
             foreach (var i in range)
             {
-                shape.Add(new HPoint(i, i * k));
+                shape.Add(new HPoint(i, i * Math.Min(s, c)));
             }
             if (s > c)
                 shape = shape.Select(i => i.Resuffled()).ToList();
+            shape.ForEach(i => Debug.WriteLine($"{i} -> {i.ToIntPoint()}"));
             var pix = shape.Select(i => i.ToIntPoint()).ToList();
             return pix;
         }

@@ -64,11 +64,12 @@ namespace MCDApp
             var start = new HPoint();
             for (int i = 0; i < corners; i++) {
                 double a = alpha * i;
-                var vec = new HPoint(Math.Cos(a), Math.Sin(a)) * len + start;
+                var vec = HPoint.Vector(a) * len + start;
                 vec.Round();
                 DrawFromTo(start, vec);
                 start = vec;
             }
+            shape = shape.Distinct().ToList();
             var xMove = shape.Select(p => p.X).Min();
             var yMove = shape.Select(p => p.Y).Min();
             shape = shape.Select(p => new IntPoint(p.X - xMove, p.Y - yMove)).ToList();

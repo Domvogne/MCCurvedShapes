@@ -14,7 +14,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
-                <RowDefinition Height="70.04"/>
+                <RowDefinition Height="125"/>
             </Grid.RowDefinitions>
             <TabControl Margin="5,5,5,5" Name="ToolsTab">
                 <TabItem Header="Элипс" Name="OvalTab">
@@ -82,15 +82,16 @@
                         <Slider Value="{Binding Angle}" Minimum="0" Maximum="90"/>
                         <TextBlock Text="{Binding Angle}"/>
                         <TextBlock>Длина</TextBlock>
-                        <Slider Value="{Binding Lenght}" Minimum="0" Maximum="90"/>
+                        <Slider Value="{Binding Lenght}" Minimum="5" Maximum="90"/>
                         <TextBlock Text="{Binding Lenght}"/>
                     </StackPanel>
                 </TabItem>
             </TabControl>
-            <StackPanel Grid.Row="1" VerticalAlignment="Top" Height="60">
-                <TextBlock Grid.Row="1" x:Name="CurrentBlock" Margin="5"/>
+            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+                <TextBlock x:Name="CurrentBlock" Margin="5"/>
                 <Slider Minimum="50" Maximum="500" TickFrequency="5" ValueChanged="Slider_ValueChanged" Value="100"/>
                 <TextBlock x:Name="ScaleTB"/>
+                <TextBlock x:Name="TotalTB" Text="123564" Margin="5"/>
             </StackPanel>
         </Grid>
         <ScrollViewer Grid.Column="1" Margin="5,5,5,5" HorizontalScrollBarVisibility="Visible">

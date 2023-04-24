@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace MCDApp
 {
@@ -32,11 +33,14 @@ namespace MCDApp
 
         public void Rebuild()
         {
-            //var endPoint = HPoint.Vector(angle / 360 * Math.Tau) * (lenght);
+            var endPoint = HPoint.Vector(angle == 90 ? Math.PI / 2 : angle / 360 * Math.Tau) * lenght;
 
-            //Line line = new Line(HPoint.Zero, endPoint);
-
-            OnNewSheme.Invoke(Line.GetPixelsTrign(angle / 360 * Math.Tau, lenght));
+            Line line = new Line(HPoint.Zero, endPoint);
+            var shape = line.GetPixels();
+            shape = shape.Select(i => new IntPoint(i.X, -i.Y)).ToList();
+            var yMove = shape.Select(p => p.Y).Min();
+            shape = shape.Select(p => new IntPoint(p.X, p.Y - yMove)).ToList();
+            OnNewSheme.Invoke(shape);
         }
     }
 }
